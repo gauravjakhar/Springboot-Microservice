@@ -2,15 +2,15 @@
 # Build stage
 #
 FROM maven:3.6.0-jdk-11-slim AS build
-WORKDIR /home/src
-COPY . .
-RUN mvn -f ./pom.xml clean package
+COPY src /home/department-service/src	
+COPY pom.xml /home/department-service
+RUN mvn -f /home/department-service/pom.xml clean package
 
 #
 # Package stage
 #
 FROM openjdk:11-jre-slim
-COPY --from=build /home/target/department-service-0.0.1.jar /usr/local/lib/app.jar
+COPY --from=build /home/department-service/target/department-service-0.0.1.jar /usr/local/lib/app.jar
 EXPOSE 9001
 ENTRYPOINT ["java","-jar","/usr/local/lib/app.jar"]
 
